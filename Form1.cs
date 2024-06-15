@@ -24,12 +24,11 @@ namespace GPFinal
         private void Form1_Load(object sender, EventArgs e)
         {
             //veriOku();
-            //tbPassword.UseSystemPasswordChar = true;
         }
 
         public void veriOku()
         {
-            try
+            try // ön görülmeyen bir durumda program direkt kapanmamsı için try-catch blokları içinde kullanılmıştır
             {
                 using (OleDbConnection con = new OleDbConnection(conStr))
                 using (OleDbCommand cmd = new OleDbCommand())
@@ -52,11 +51,11 @@ namespace GPFinal
 
         public void veriYaz()
         {
-            try
+            try 
             {
                 using (OleDbConnection con = new OleDbConnection(conStr))
-                using (OleDbCommand cmd = new OleDbCommand())
-                {
+                using (OleDbCommand cmd = new OleDbCommand()) // using deyimleri içinde kullanıldığı için parameters.clear yapılması gerekmiyor
+                {// using ifadesi sayesinde, program using ifadesinin dışına çıktığında içinde tanımlanan herhangi bir şey dışarıda kullanılamıyor.
                     cmd.Connection = con;
                     cmd.CommandText = "insert into cihazlar (cihaz_id, cihaz_ismi, cihaz_turu) values (P1,P2, P3)";
                     cmd.Parameters.Add("@P1", OleDbType.Integer).Value = Convert.ToInt32(tbCihazID.Text);
@@ -74,17 +73,10 @@ namespace GPFinal
 
         }
 
-        public void sifirla()
-        {
-            //tbName.Text = "";
-            //tbPassword.Text = "";
-            //tbSurnmae.Text = "";
-        }
-
         private void btnAyarDosyasıKontrol_Click(object sender, EventArgs e)
         {
-
-            if (File.Exists(path + "\\ayarlar.ini"))
+            // Dosya varlık kontrolü
+            if (File.Exists(path + "\\ayarlar.ini")) // File.Exists bool tipinde değer döndürdüğü için direkt if içinde kullanılabiliyor
             {
                 MessageBox.Show("ayarlar.ini dosyanız bulunuyor");
             }
@@ -95,7 +87,8 @@ namespace GPFinal
         }
 
         private void btnVeritabaniDosyaKontrol_Click(object sender, EventArgs e)
-        {
+        {            
+            // Dosya varlık kontrolü
             if (File.Exists(path + "\\veriler.accdb"))
             {
                 MessageBox.Show("veriler.accdb dosyanız bulunuyor");
@@ -140,7 +133,7 @@ namespace GPFinal
                     lbAyarlar.Items.Add(_text);
                 }
                 sr.Close();
-                fs.Close();
+                fs.Close();// kapatma işlemi çok öenmli, 2. ve üzeri istekler kapatılmayan fs'den dolayı çalıştırılamaz!
             }
             else
             {
